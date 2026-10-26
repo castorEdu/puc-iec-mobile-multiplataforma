@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../state/favorites.dart';
 // TODO [TASK 8]: descomente quando o remote_config.dart estiver pronto
-// import '../services/remote_config.dart';
+import '../services/remote_config.dart';
 import '../widgets/movie_list.dart';
 import '../widgets/offline_banner.dart';
 import '../widgets/offline_toggle.dart';
@@ -50,6 +50,25 @@ class HomeScreen extends ConsumerWidget {
           // Vire esta parte um FutureBuilder<String> (ou StatefulWidget com initState)
           // que chama fetchBannerMessage() de '../services/remote_config.dart' e
           // renderiza o texto retornado num Container no topo da lista.
+          FutureBuilder<String>(
+            future: fetchBannerMessage(),
+            builder: (context, snapshot) {
+              final message = snapshot.data;
+              if (message == null || message.isEmpty) {
+                return const SizedBox.shrink();
+              }
+              return Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                color: Colors.indigo.withValues(alpha: 0.25),
+                child: Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontWeight: FontWeight.w500),
+                ),
+              );
+            },
+          ),
           const Expanded(child: MovieList()), // lista vinda do repositório (cache-first)
         ],
       ),

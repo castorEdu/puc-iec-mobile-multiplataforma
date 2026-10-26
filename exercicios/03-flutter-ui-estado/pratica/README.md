@@ -19,6 +19,10 @@ flutter analyze                      # precisa ficar limpo
 ```
 Comece com os testes **vermelhos**; deixe-os **verdes**. `test/checklist_test.dart` e `test/offline_test.dart` são a **spec** (não edite).
 
+## Trade-offs: Estado Local vs. Cloud vs. Offline-first
+
+Manter o estado **apenas localmente** (como um `Notifier<Set<int>>` em memória ou armazenamento local simples) oferece latência zero, resposta instantânea na interface e independência de conectividade, porém os dados ficam presos a um único dispositivo (ou sessão, se apenas em memória) e podem ser perdidos ao limpar o navegador ou trocar de aparelho. Por outro lado, persistir o estado **diretamente na nuvem (Cloud / Firestore)** garante durabilidade e sincronização em tempo real entre múltiplos dispositivos e abas, mas introduz dependência de rede, maior latência e possíveis custos por leitura/escrita. A arquitetura **Offline-first** combina o melhor dos dois mundos: a interface sempre lê primeiro do cache local com controle de validade (TTL) e aplica atualizações otimistas enfileiradas (`SyncQueue`) com resolução de conflitos quando não há conexão, entregando a fluidez e disponibilidade do estado local junto com a consistência eventual e sincronização multi-dispositivo da nuvem ao custo de maior complexidade arquitetural.
+
 ## O que completar (🧑‍🏫 aula · 🧑‍💻 casa)
 | TASK | Arquivo | O quê | |
 |---|---|---|---|
